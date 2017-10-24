@@ -117,12 +117,12 @@ class SpotifyCoverSensor(Entity):
       from colorthief import ColorThief
 
       color_thief = ColorThief(cover_path)
-      pallete = color_thief.get_palette(quality=3)
+      pallete = color_thief.get_palette(color_count=4, quality=1)
       colors = {
-        'dominant': color_thief.get_color(quality=1),
-        'accent_1': pallete[0],
-        'accent_2': pallete[1],
-        'accent_3': pallete[2]
+        'dominant': pallete[0],
+        'accent_1': pallete[1],
+        'accent_2': pallete[2],
+        'accent_3': pallete[3]
       }
       file = open(cover_json, 'w')
       file.write(json.dumps(colors))
@@ -143,7 +143,7 @@ class SpotifyCoverSensor(Entity):
   def _prepare_player(self):
     token_refreshed = False
     if self.oauth.is_token_expired(self.token_info):
-      new_token = self.oauth.refresh_access_token(self.token_info['refresh_token'])
+      new_token = self.oauth.refresh_access_token(self.token_info.get('refresh_token'))
       if new_token is None:
         return
       token_refreshed = True
