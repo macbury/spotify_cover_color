@@ -17,3 +17,26 @@ Add sensor to `<config>/configuration.yaml`:
 sensor:
   - platform: spotify_cover_sensor
 ```
+
+# Example automation
+
+```yaml
+- alias: lighting_by_spotify_cover
+  trigger:
+    - platform: state
+      entity_id: sensor.spotify_cover
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: 'sensor.spotify_cover'
+        state: 'on'
+      - condition: template
+        value_template: '{{ states.media_player.spotify.attributes.source == "[AV] Samsung Soundbar K650" }}'
+  action:
+    - service: light.turn_on
+      data_template:
+        entity_id: 'light.tv_led_strip'
+        rgb_color: ["{{ states.sensor.spotify_cover.attributes.dominant_rgb[0]|int }}", "{{ states.sensor.spotify_cover.attributes.dominant_rgb[1]|int }}", "{{ states.sensor.spotify_cover.attributes.dominant_rgb[2]|int }}"]
+
+```
