@@ -37,7 +37,7 @@ class SpotifyCoverSensor(Entity):
     self._name  = 'spotify_cover'
     self._player = None
     self._oauth = None
-    self._token_info = None
+    self.token_info = None
     self._dominant_color = None
     self._accent_color_1 = None
     self._accent_color_2 = None
