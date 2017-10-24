@@ -3,6 +3,12 @@ Fetch dominant colors from current playing spotify color and store it in sensor
 
 # Installation
 
+First linux dependencies:
+
+```
+sudo apt-get install python-imaging
+```
+
 Copy `sensor/spotify_cover_sensor.py` to `<config>/custom_components/sensor/spotify_cover_sensor.py`
 Ensure that you have https://home-assistant.io/components/media_player.spotify/ configured and authenticated
 Add sensor to `<config>/configuration.yaml`:
