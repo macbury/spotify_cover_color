@@ -1,5 +1,3 @@
-import spotipy.oauth2
-import spotipy
 import urllib.request
 import logging
 import asyncio
@@ -7,7 +5,6 @@ import os
 import json
 import tempfile
 
-from colorthief import ColorThief
 from homeassistant.helpers.event import async_track_state_change
 from homeassistant.helpers.entity import Entity
 from homeassistant.components.media_player.spotify import (
@@ -30,6 +27,7 @@ LOGGER       = logging.getLogger(__name__)
 REQUIREMENTS = ['colorthief==0.2.1', 'https://github.com/happyleavesaoc/spotipy/'
                 'archive/%s.zip#spotipy==2.4.4' % COMMIT]
 DEPENDENCIES = ['media_player']
+
 
 class SpotifyCoverSensor(Entity):
   def __init__(self, hass, config):
@@ -116,6 +114,8 @@ class SpotifyCoverSensor(Entity):
     cover_json = os.path.join(tempfile.gettempdir(), 'cover_'+album_id+'.json')
 
     if os.path.isfile(cover_json) is False:
+      from colorthief import ColorThief
+
       color_thief = ColorThief(cover_path)
       pallete = color_thief.get_palette(quality=3)
       colors = {
@@ -131,6 +131,7 @@ class SpotifyCoverSensor(Entity):
     return json.load(open(cover_json, 'r'))
 
   def _load_token(self):
+    import spotipy.oauth2
     callback_url = '{}{}'.format(self.hass.config.api.base_url, AUTH_CALLBACK_PATH)
     cache = self.config.get(CONF_CACHE_PATH, self.hass.config.path(DEFAULT_CACHE_PATH))
     self.oauth = spotipy.oauth2.SpotifyOAuth(
@@ -149,9 +150,8 @@ class SpotifyCoverSensor(Entity):
       self.token_info = new_token
 
     if self._player is None or token_refreshed:
+      import spotipy
       self._player = spotipy.Spotify(auth=self.token_info.get('access_token'))
-
-
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
   add_devices([SpotifyCoverSensor(hass, config)])
