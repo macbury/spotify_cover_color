@@ -6,7 +6,7 @@ Fetch dominant colors from current playing spotify color and store it in sensor
 First linux dependencies:
 
 ```
-sudo apt-get install python-imaging
+sudo apt-get install python3-imaging python-dev python-setuptools libtiff4-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.5-dev tk8.5-dev
 ```
 
 Copy `sensor/spotify_cover_sensor.py` to `<config>/custom_components/sensor/spotify_cover_sensor.py`
