@@ -1,0 +1,35 @@
+homeassistant:
+  name: testEnv
+  latitude: 0
+  longitude: 0
+  elevation: 0
+  unit_system: metric
+  time_zone: Europe/Warsaw
+
+config:
+
+updater:
+
+discovery:
+
+history:
+
+logbook:
+
+logger:
+  default: info
+
+http:
+  development: true
+  server_host: 0.0.0.0
+  base_url: 0.0.0.0:8123
+
+media_player:
+  - platform: spotify
+    client_id: !secret spotify_client_id
+    client_secret: !secret spotify_client_secret
+    aliases:
+      living_room_h123hasd: 'Living Room'
+
+sensor:
+  - platform: spotify_cover_sensor
