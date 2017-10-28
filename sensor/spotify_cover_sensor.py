@@ -71,11 +71,12 @@ class SpotifyCoverSensor(Entity):
     }
 
   def update(self):
+    LOGGER.info("Updating sensor information using spotify api")
     self._prepare_player()
 
     self._state = STATE_OFF
 
-    if self.oauth.is_token_expired(self.token_info):
+    if self.token_info is None or self.oauth.is_token_expired(self.token_info):
       LOGGER.warning("Spotify failed to update, token expired.")
       return 
 
@@ -141,15 +142,14 @@ class SpotifyCoverSensor(Entity):
     self.token_info = self.oauth.get_cached_token()
 
   def _prepare_player(self):
-    token_refreshed = False
     if self.oauth.is_token_expired(self.token_info):
-      new_token = self.oauth.refresh_access_token(self.token_info.get('refresh_token'))
-      if new_token is None:
-        return
-      token_refreshed = True
-      self.token_info = new_token
+      self._load_token()
+      self._player = None
 
-    if self._player is None or token_refreshed:
+    if self.oauth.is_token_expired(self.token_info):
+      return None
+
+    if self._player is None:
       import spotipy
       self._player = spotipy.Spotify(auth=self.token_info.get('access_token'))
 
